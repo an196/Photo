@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/action_gallerry"
+        android:title="@string/menu_home"
+        android:icon="@drawable/ic_gallery"/>
+    <item android:id="@+id/action_album"
+        android:title="@string/menu_gallery"
+        android:icon="@drawable/ic_album"/>
+    <item android:id="@+id/action_video"
+        android:title="@string/menu_slideshow"
+        android:icon="@drawable/ic_video"/>
+
+</menu>
