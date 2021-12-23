@@ -2,6 +2,8 @@ package com.example.photo_app;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -16,14 +18,20 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.photo_app.adapter.RecyclerViewAdapter;
 import com.example.photo_app.databinding.ActivityMainBinding;
+import com.example.photo_app.model.ImageModel;
 import com.example.photo_app.ui.album.AlbumFragment;
 import com.example.photo_app.ui.gallery.GalleryFragment;
 import com.example.photo_app.ui.video.VideoFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements  NavigationView.OnNavigationItemSelectedListener {
     private AppBarConfiguration mAppBarConfiguration;
@@ -36,10 +44,18 @@ public class MainActivity extends AppCompatActivity implements  NavigationView.O
     private  static  final  int  FRAGMENT_SLIDESHOW = 3;
     private  int currentFragment = FRAGMENT_HOME;
 
+    private RecyclerView imagesRV;
+    private RecyclerViewAdapter imageRVAdapter;
+    private ImageModel imageModel;
+
+    private ArrayList<String> imagePaths =null;
+    Handler loadGallryHandler = new Handler();
+
     @RequiresApi(api = Build.VERSION_CODES.S)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -66,14 +82,17 @@ public class MainActivity extends AppCompatActivity implements  NavigationView.O
                         switch (item.getItemId()){
                             case R.id.action_gallery:
                                 openGalleryFragment();
+                                setTileToolbar();
                                 mNavigationView.setCheckedItem(R.id.nav_gallery);
                                 break;
                             case R.id.action_album:
                                 openAlbumFragment();
+                                setTileToolbar();
                                 mNavigationView.setCheckedItem(R.id.nav_album);
                                 break;
                             case R.id.action_video:
                                 openVideoFragment();
+                                setTileToolbar();
                                 mNavigationView.setCheckedItem(R.id.nav_video);
                                 break;
                         }
@@ -81,11 +100,16 @@ public class MainActivity extends AppCompatActivity implements  NavigationView.O
                     }
                 }
         );
+
+        imageModel = new ImageModel();
+
+
         replaceFragment(new GalleryFragment());
 
         mBottomNavigationView.getMenu().findItem(R.id.action_gallery).setChecked(true);
         mNavigationView.setCheckedItem(R.id.nav_gallery);
         setTileToolbar();
+        prepareRecyclerView();
     }
 
     @Override
@@ -135,7 +159,10 @@ public class MainActivity extends AppCompatActivity implements  NavigationView.O
         if(currentFragment !=  FRAGMENT_HOME){
             replaceFragment(new GalleryFragment());
 
+
+
             currentFragment  = FRAGMENT_HOME;
+            prepareRecyclerView();
         }
     }
     private void openAlbumFragment(){
@@ -178,4 +205,33 @@ public class MainActivity extends AppCompatActivity implements  NavigationView.O
             getSupportActionBar().setTitle(title);
         }
     }
+
+    private void prepareRecyclerView() {
+        imagePaths = imageModel.getAllImage(this);
+        imagesRV = findViewById(R.id.idRVImages);
+        Thread myBackgroundThread = new Thread( backgroundTask, "load images service");
+        myBackgroundThread.start();
+    }
+
+    private Runnable foregroundRunnable = new Runnable() {
+        @Override
+        public void run() {
+            try {
+
+                GridLayoutManager manager = new GridLayoutManager(MainActivity.this, 4);
+                imagesRV.setLayoutManager(manager);
+                imagesRV.setAdapter(imageRVAdapter);
+
+            }
+            catch (Exception e) { Log.e("<<foregroundTask>>", e.getMessage()); }
+        }
+    };
+
+    private Runnable backgroundTask = new Runnable() {
+        @Override
+        public void run() {
+            imageRVAdapter = new RecyclerViewAdapter(MainActivity.this, imagePaths);
+            loadGallryHandler.post(foregroundRunnable);
+        }
+    };
 }

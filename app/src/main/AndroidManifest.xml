@@ -12,7 +12,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Photo_App"
+        android:screenOrientation="portrait"
+        android:requestLegacyExternalStorage="true"
         >
+        <activity
+            android:name=".ImageDetailActivity"
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:theme="@style/Theme.Photo_App.NoActionBar"
