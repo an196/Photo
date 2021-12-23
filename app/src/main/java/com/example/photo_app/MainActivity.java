@@ -109,17 +109,20 @@ public class MainActivity extends AppCompatActivity implements  NavigationView.O
         switch (i) {
             case R.id.nav_gallery:
                 openGalleryFragment();
+                setTileToolbar();
                 mBottomNavigationView.getMenu().findItem(R.id.action_gallery).setChecked(true);
                 break;
 
             case R.id.nav_album:
-                mBottomNavigationView.getMenu().findItem(R.id.action_album).setChecked(true);
                 openAlbumFragment();
+                mBottomNavigationView.getMenu().findItem(R.id.action_album).setChecked(true);
+                setTileToolbar();
                 break;
 
             case R.id.nav_video:
-                mBottomNavigationView.getMenu().findItem(R.id.action_video).setChecked(true);
                 openVideoFragment();
+                mBottomNavigationView.getMenu().findItem(R.id.action_video).setChecked(true);
+                setTileToolbar();
                 break;
             default:
                 break;
