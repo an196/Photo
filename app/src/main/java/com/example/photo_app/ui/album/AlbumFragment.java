@@ -2,6 +2,7 @@ package com.example.photo_app.ui.album;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,11 +26,14 @@ public class AlbumFragment extends Fragment {
 
     private AlbumViewModel albumViewModel;
     private FragmentAlbumBinding binding;
-    //album
+
     public static ArrayList<Model_images> al_images;
     private Adapter_PhotosFolder obj_adapter;
     private GridView gv_folder;
     private AlbumModel albumModel;
+    private View root;
+    Handler loadAlbumHandler = new Handler();
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -37,14 +41,12 @@ public class AlbumFragment extends Fragment {
                 new ViewModelProvider(this).get(AlbumViewModel.class);
 
         binding = FragmentAlbumBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
+        root = binding.getRoot();
 
         //album fragment
         albumModel = new AlbumModel();
-        al_images = albumModel.getAllAlbum(getContext());
+
         gv_folder = (GridView)root.findViewById(R.id.gv_folder);
-        obj_adapter = new Adapter_PhotosFolder(getContext().getApplicationContext(),al_images);
-        gv_folder.setAdapter(obj_adapter);
         gv_folder.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -54,6 +56,7 @@ public class AlbumFragment extends Fragment {
             }
         });
 
+        prepareLoadAlbumList();
         return root;
     }
 
@@ -62,4 +65,30 @@ public class AlbumFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
+
+    private void prepareLoadAlbumList(){
+        Thread myBackgroundThread = new Thread( backgroundTask, "load albums service");
+        myBackgroundThread.start();
+    }
+
+    private Runnable foregroundRunnable = new Runnable(){
+
+        @Override
+        public void run() {
+            gv_folder.setAdapter(obj_adapter);
+        }
+    };
+
+    private Runnable backgroundTask = new Runnable(){
+
+        @Override
+        public void run() {
+
+
+            al_images = albumModel.getAllAlbum(getContext());
+
+            obj_adapter = new Adapter_PhotosFolder(getContext().getApplicationContext(),al_images);
+            loadAlbumHandler.post(foregroundRunnable);
+        }
+    };
 }

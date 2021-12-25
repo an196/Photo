@@ -2,8 +2,6 @@ package com.example.photo_app.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +10,8 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.photo_app.ImageDetailActivity;
 import com.example.photo_app.R;
 
@@ -50,9 +50,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         if (imgFile.exists()) {
 
             // if the file exists then we are displaying that file in our image view using picasso library.
-            Bitmap myBitmap = BitmapFactory.decodeFile("/"+imgFile);
-
-            holder.imageIV.setImageBitmap(myBitmap);
+            //Bitmap myBitmap = BitmapFactory.decodeFile("/"+imgFile);
+            Glide.with(context).load("/"+imgFile)
+                    .centerCrop()
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true)
+                    .into( holder.imageIV);
+            //holder.imageIV.setImageBitmap(myBitmap);
 
             // on below line we are adding click listener to our item of recycler view.
             holder.itemView.setOnClickListener(new View.OnClickListener() {

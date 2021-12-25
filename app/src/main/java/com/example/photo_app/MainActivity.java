@@ -2,8 +2,6 @@ package com.example.photo_app;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -18,20 +16,14 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.photo_app.adapter.RecyclerViewAdapter;
 import com.example.photo_app.databinding.ActivityMainBinding;
-import com.example.photo_app.model.ImageModel;
 import com.example.photo_app.ui.album.AlbumFragment;
 import com.example.photo_app.ui.gallery.GalleryFragment;
 import com.example.photo_app.ui.video.VideoFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
-
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements  NavigationView.OnNavigationItemSelectedListener {
     private AppBarConfiguration mAppBarConfiguration;
@@ -43,9 +35,6 @@ public class MainActivity extends AppCompatActivity implements  NavigationView.O
     private  static  final  int  FRAGMENT_GALLERY = 2;
     private  static  final  int  FRAGMENT_SLIDESHOW = 3;
     private  int currentFragment = FRAGMENT_HOME;
-
-
-
 
 
     @RequiresApi(api = Build.VERSION_CODES.S)
@@ -159,12 +148,6 @@ public class MainActivity extends AppCompatActivity implements  NavigationView.O
         if(currentFragment !=  FRAGMENT_GALLERY){
             replaceFragment(new AlbumFragment());
             currentFragment  = FRAGMENT_GALLERY;
-
-
-
-
-
-
         }
     }
 

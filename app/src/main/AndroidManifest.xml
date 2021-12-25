@@ -18,6 +18,7 @@
             android:name=".ImageDetailActivity"
             android:exported="false" />
         <activity
+
             android:name=".PhotosActivity"
             android:exported="false" />
         <activity

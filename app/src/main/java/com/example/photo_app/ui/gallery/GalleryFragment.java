@@ -64,7 +64,7 @@ public class GalleryFragment extends Fragment {
         public void run() {
             try {
 
-                GridLayoutManager manager = new GridLayoutManager(getContext(), 4);
+                GridLayoutManager manager = new GridLayoutManager(getContext(), 3);
                 imagesRV.setLayoutManager(manager);
                 imagesRV.setAdapter(imageRVAdapter);
 

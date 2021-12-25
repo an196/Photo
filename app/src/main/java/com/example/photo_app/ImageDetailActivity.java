@@ -49,7 +49,7 @@ public class ImageDetailActivity extends Activity {
             imageView.setImageBitmap(bmp);
 
             Toast.makeText(getApplicationContext(), ""+imgPath, Toast.LENGTH_SHORT).show();
-            Picasso.get().load(imgFile).placeholder(R.drawable.ic_launcher_background).into(imageView);
+            Picasso.get().load(imgFile).into(imageView);
         }
     }
 
