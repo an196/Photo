@@ -1,19 +1,23 @@
 package com.example.photo_app;
 
-import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
 
-public class ImageDetailActivity extends Activity {
+public class ImageDetailActivity extends AppCompatActivity {
 
     // creating a string variable, image view variable
     // and a variable for our scale gesture detector class.
@@ -29,8 +33,19 @@ public class ImageDetailActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_detail);
 
+        // calling the action bar
+        ActionBar actionBar = getSupportActionBar();
+
+        // showing the back button in action bar
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
+        // this event will enable the back
+        // function to the button on press
+
+
         // on below line getting data which we have passed from our adapter class.
         imgPath = getIntent().getStringExtra("imgPath");
+
 
         // initializing our image view.
         imageView = (ImageView) findViewById(R.id.idIVImage);
@@ -78,5 +93,15 @@ public class ImageDetailActivity extends Activity {
             imageView.setScaleY(mScaleFactor);
             return true;
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                this.finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

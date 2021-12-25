@@ -83,8 +83,9 @@ public class AlbumFragment extends Fragment {
 
         @Override
         public void run() {
-
-
+            if(al_images != null){
+                al_images.clear();
+            }
             al_images = albumModel.getAllAlbum(getContext());
 
             obj_adapter = new Adapter_PhotosFolder(getContext().getApplicationContext(),al_images);

@@ -17,7 +17,6 @@ import com.example.photo_app.model.Model_images;
 import java.util.ArrayList;
 
 public class GridViewAdapter extends ArrayAdapter<Model_images> {
-
     Context context;
     ViewHolder viewHolder;
     ArrayList<Model_images> al_menu = new ArrayList<>();
@@ -71,7 +70,6 @@ public class GridViewAdapter extends ArrayAdapter<Model_images> {
             viewHolder.tv_foldersize = (TextView) convertView.findViewById(R.id.tv_folder2);
             viewHolder.iv_image = (ImageView) convertView.findViewById(R.id.iv_image);
 
-
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -80,14 +78,11 @@ public class GridViewAdapter extends ArrayAdapter<Model_images> {
         viewHolder.tv_foldern.setVisibility(View.GONE);
         viewHolder.tv_foldersize.setVisibility(View.GONE);
 
-
-
         Glide.with(context).load("file://" + al_menu.get(int_position).getAl_imagepath().get(position))
                 .centerCrop()
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .skipMemoryCache(true)
                 .into(viewHolder.iv_image);
-
 
         return convertView;
 
@@ -96,9 +91,5 @@ public class GridViewAdapter extends ArrayAdapter<Model_images> {
     private static class ViewHolder {
         TextView tv_foldern, tv_foldersize;
         ImageView iv_image;
-
-
     }
-
-
 }
