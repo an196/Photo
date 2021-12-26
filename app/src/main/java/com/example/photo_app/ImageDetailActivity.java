@@ -1,8 +1,14 @@
 package com.example.photo_app;
 
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
@@ -12,10 +18,13 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.util.List;
 
 public class ImageDetailActivity extends AppCompatActivity {
 
@@ -24,7 +33,7 @@ public class ImageDetailActivity extends AppCompatActivity {
     String imgPath;
     private ImageView imageView;
     private ScaleGestureDetector scaleGestureDetector;
-
+    private ActionBar mActionBar;
     // on below line we are defining our scale factor.
     private float mScaleFactor = 1.0f;
 
@@ -34,10 +43,10 @@ public class ImageDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_image_detail);
 
         // calling the action bar
-        ActionBar actionBar = getSupportActionBar();
+        mActionBar  = getSupportActionBar();
 
         // showing the back button in action bar
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        mActionBar.setDisplayHomeAsUpEnabled(true);
 
         // this event will enable the back
         // function to the button on press
@@ -66,6 +75,8 @@ public class ImageDetailActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), ""+imgPath, Toast.LENGTH_SHORT).show();
             Picasso.get().load(imgFile).into(imageView);
         }
+
+
     }
 
     @Override
@@ -100,8 +111,67 @@ public class ImageDetailActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 this.finish();
+            case  R.id.action_share:
+                //Toast.makeText(ImageDetailActivity.this, "asdasd", Toast.LENGTH_SHORT).show();
+                imageView.invalidate();
+                BitmapDrawable bitmapDrawable = (BitmapDrawable) imageView.getDrawable();
+                Bitmap bitmap = bitmapDrawable.getBitmap();
+                shareImageandText(bitmap);
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.image_detail_top_navigation, menu);
+
+        return true;
+    }
+
+    private void shareImageandText(Bitmap bitmap) {
+        Uri uri = getmageToShare(bitmap);
+        Intent intent = new Intent(Intent.ACTION_SEND);
+
+        // putting uri of image to be shared
+        intent.putExtra(Intent.EXTRA_STREAM, uri);
+
+        // adding text to share
+        intent.putExtra(Intent.EXTRA_TEXT, "Sharing Image");
+
+        // Add subject Here
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Subject Here");
+
+        // setting type to image
+        intent.setType("image/png");
+        Intent chooser = Intent.createChooser(intent, "Share File");
+
+        List<ResolveInfo> resInfoList = this.getPackageManager().queryIntentActivities(chooser, PackageManager.MATCH_DEFAULT_ONLY);
+
+        for (ResolveInfo resolveInfo : resInfoList) {
+            String packageName = resolveInfo.activityInfo.packageName;
+            this.grantUriPermission(packageName, uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        }
+        // calling startactivity() to share
+        startActivity(chooser);
+    }
+
+    // Retrieving the url to share
+    private Uri getmageToShare(Bitmap bitmap) {
+        File imagefolder = new File(getCacheDir(), "images");
+        Uri uri = null;
+        try {
+            imagefolder.mkdirs();
+            File file = new File(imagefolder, "shared_image.png");
+            FileOutputStream outputStream = new FileOutputStream(file);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 90, outputStream);
+            outputStream.flush();
+            outputStream.close();
+            uri = FileProvider.getUriForFile(this, "com.anni.shareimage.fileprovider", file);
+        } catch (Exception e) {
+            Toast.makeText(this, "" + e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+        return uri;
     }
 }
