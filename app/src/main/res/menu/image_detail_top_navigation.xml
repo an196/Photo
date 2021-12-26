@@ -5,7 +5,7 @@
         android:id="@+id/action_share"
         android:icon="@drawable/ic_share_24"
         android:title="@string/nav_top_share"
-        app:showAsAction="never" />
+        app:showAsAction="ifRoom" />
 
 <!--    <item-->
 <!--        android:id="@+id/more"-->

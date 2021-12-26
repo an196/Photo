@@ -112,11 +112,7 @@ public class ImageDetailActivity extends AppCompatActivity {
             case android.R.id.home:
                 this.finish();
             case  R.id.action_share:
-                //Toast.makeText(ImageDetailActivity.this, "asdasd", Toast.LENGTH_SHORT).show();
-                imageView.invalidate();
-                BitmapDrawable bitmapDrawable = (BitmapDrawable) imageView.getDrawable();
-                Bitmap bitmap = bitmapDrawable.getBitmap();
-                shareImageandText(bitmap);
+                shareImageToAnOntherApp();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -173,5 +169,12 @@ public class ImageDetailActivity extends AppCompatActivity {
             Toast.makeText(this, "" + e.getMessage(), Toast.LENGTH_LONG).show();
         }
         return uri;
+    }
+
+    private  void shareImageToAnOntherApp(){
+        imageView.invalidate();
+        BitmapDrawable bitmapDrawable = (BitmapDrawable) imageView.getDrawable();
+        Bitmap bitmap = bitmapDrawable.getBitmap();
+        shareImageandText(bitmap);
     }
 }
