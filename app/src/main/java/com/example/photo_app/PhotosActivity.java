@@ -6,7 +6,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -14,6 +13,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.photo_app.adapter.GridViewAdapter;
 import com.example.photo_app.ui.album.AlbumFragment;
+
+import java.util.ArrayList;
 
 public class PhotosActivity extends AppCompatActivity {
     int int_position;
@@ -44,16 +45,16 @@ public class PhotosActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id)
             {
-                String imgPath =  AlbumFragment.al_images.get(int_position)
-                        .getAl_imagepath().get(position);
-                Toast.makeText(getApplicationContext(),imgPath, Toast.LENGTH_SHORT).show();
+                ArrayList<String> album =  AlbumFragment.al_images.get(int_position)
+                        .getAl_imagepath();
+
 
                 // inside on click listener we are creating a new intent
                 Intent i = new Intent(PhotosActivity.this, ImageDetailActivity.class);
 
                 // on below line we are passing the image path to our new activity.
-                i.putExtra("imgPath", imgPath);
-
+                i.putExtra("album", album);
+                i.putExtra("position", position);
                 // at last we are starting our activity.
                 PhotosActivity.this.startActivity(i);
             }

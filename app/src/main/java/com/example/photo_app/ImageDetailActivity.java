@@ -20,20 +20,26 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.example.photo_app.helper.OnSwipeTouchListener;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.photo_app.MainActivity.imagePaths;
 public class ImageDetailActivity extends AppCompatActivity {
 
     // creating a string variable, image view variable
     // and a variable for our scale gesture detector class.
-    String imgPath;
+    private int position;
     private ImageView imageView;
     private ScaleGestureDetector scaleGestureDetector;
     private ActionBar mActionBar;
+    private File imgFile;
     // on below line we are defining our scale factor.
     private float mScaleFactor = 1.0f;
 
@@ -48,35 +54,63 @@ public class ImageDetailActivity extends AppCompatActivity {
         // showing the back button in action bar
         mActionBar.setDisplayHomeAsUpEnabled(true);
 
-        // this event will enable the back
-        // function to the button on press
-
-
-        // on below line getting data which we have passed from our adapter class.
-        imgPath = getIntent().getStringExtra("imgPath");
-
-
         // initializing our image view.
         imageView = (ImageView) findViewById(R.id.idIVImage);
 
         // on below line we are initializing our scale gesture detector for zoom in and out for our image.
         scaleGestureDetector = new ScaleGestureDetector(this, new ScaleListener());
 
-        // on below line we are getting our image file from its path.
-        File imgFile = new File(imgPath);
+        // on below line getting data which we have passed from our adapter class.
+        position = getIntent().getIntExtra("position", 0 );
+        ArrayList<String> album = getIntent().getStringArrayListExtra("album" );
+        if( album != null)
+            imagePaths = album;
+
+        imgFile = new File(imagePaths.get(position));
 
         // if the file exists then we are loading that image in our image view.
         if (imgFile.exists()) {
-            File f = new File(imgPath);
+           loadImage();
+            imageView.setOnTouchListener(new OnSwipeTouchListener(ImageDetailActivity.this){
+                public void onSwipeTop() {
+                }
+                public void onSwipeRight() {
+                    if(position > 0 ){
+                        position--;
+                        imgFile = new File(imagePaths.get(position));
+                        Glide.with(ImageDetailActivity.this).load(imgFile)
+                                .centerCrop()
+                                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                .skipMemoryCache(true)
+                                .into(imageView);
+                    }
+                }
+                public void onSwipeLeft() {
 
-            Bitmap bmp = BitmapFactory.decodeFile(f.getAbsolutePath());
-            imageView.setImageBitmap(bmp);
-
-            Toast.makeText(getApplicationContext(), ""+imgPath, Toast.LENGTH_SHORT).show();
-            Picasso.get().load(imgFile).into(imageView);
+                    if(position < imagePaths.size() -1){
+                        position++;
+                        imgFile = new File(imagePaths.get(position));
+                        Glide.with(ImageDetailActivity.this).load("/"+imgFile)
+                                .centerCrop()
+                                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                .skipMemoryCache(true)
+                                .into(imageView);
+                    }
+                }
+                public void onSwipeBottom() {
+                }
+            });
         }
 
 
+    }
+
+    private void loadImage(){
+        File f = new File(imagePaths.get(position));
+
+        Bitmap bmp = BitmapFactory.decodeFile(f.getAbsolutePath());
+        imageView.setImageBitmap(bmp);
+        Picasso.get().load(imgFile).into(imageView);
     }
 
     @Override

@@ -1,5 +1,4 @@
 package com.example.photo_app.ui.album;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;

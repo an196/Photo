@@ -18,12 +18,15 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.photo_app.databinding.ActivityMainBinding;
+import com.example.photo_app.model.VideoModel;
 import com.example.photo_app.ui.album.AlbumFragment;
 import com.example.photo_app.ui.gallery.GalleryFragment;
 import com.example.photo_app.ui.video.VideoFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements  NavigationView.OnNavigationItemSelectedListener {
     private AppBarConfiguration mAppBarConfiguration;
@@ -36,6 +39,9 @@ public class MainActivity extends AppCompatActivity implements  NavigationView.O
     private  static  final  int  FRAGMENT_SLIDESHOW = 3;
     private  int currentFragment = FRAGMENT_HOME;
 
+    public static ArrayList<VideoModel> videoArrayList;
+    public static ArrayList<String> imagePaths;
+    public static int albumSeleted;
 
     @RequiresApi(api = Build.VERSION_CODES.S)
     @Override

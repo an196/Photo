@@ -16,15 +16,20 @@
         android:theme="@style/Theme.Photo_App" >
         <activity
             android:name=".ImageDetailActivity"
-            android:exported="false" />
+            android:exported="true"
+            android:configChanges="orientation|screenSize"/>
         <activity
-
-            android:name=".PhotosActivity"
-            android:exported="false" />
+            android:configChanges="orientation|screenSize"
+            android:name=".PhotosActivity"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.Photo_App.NoActionBar" />
+            android:theme="@style/Theme.Photo_App.NoActionBar"
+            android:configChanges="orientation|screenSize"/>
+        <activity
+            android:name=".VideoPlayActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:configChanges="orientation|screenSize"/>
         <activity
             android:name=".SplashActivity"
             android:exported="true" >

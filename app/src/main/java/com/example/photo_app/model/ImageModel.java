@@ -24,7 +24,7 @@ public class ImageModel {
 
             // on below line we are creating a new
             // string to order our images by string.
-            final String orderBy = MediaStore.Images.Media._ID;
+            final String orderBy = MediaStore.Images.Media.DATE_TAKEN + " DESC";
 
             // this method will stores all the images
             // from the gallery in Cursor

@@ -18,7 +18,7 @@ import com.example.photo_app.adapter.RecyclerViewAdapter;
 import com.example.photo_app.databinding.FragmentGalleryBinding;
 import com.example.photo_app.model.ImageModel;
 
-import java.util.ArrayList;
+import static com.example.photo_app.MainActivity.imagePaths;
 
 public class GalleryFragment extends Fragment {
 
@@ -29,7 +29,8 @@ public class GalleryFragment extends Fragment {
     private RecyclerViewAdapter imageRVAdapter;
     private ImageModel imageModel;
 
-    private ArrayList<String> imagePaths =null;
+
+
     Handler loadGallryHandler = new Handler();
 
     public View onCreateView(@NonNull LayoutInflater inflater,
