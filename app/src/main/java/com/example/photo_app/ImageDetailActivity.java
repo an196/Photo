@@ -4,8 +4,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
@@ -21,8 +19,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 import androidx.viewpager.widget.ViewPager;
 
+import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
 import com.example.photo_app.adapter.ViewPagerAdapter;
-import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -51,14 +49,12 @@ public class ImageDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_detail);
 
+
         // calling the action bar
         mActionBar  = getSupportActionBar();
 
         // showing the back button in action bar
         mActionBar.setDisplayHomeAsUpEnabled(true);
-
-
-
 
         // on below line we are initializing our scale gesture detector for zoom in and out for our image.
         scaleGestureDetector = new ScaleGestureDetector(this, new ScaleListener());
@@ -75,6 +71,8 @@ public class ImageDetailActivity extends AppCompatActivity {
 
         mViewPager.setAdapter(mViewPagerAdapter);
         mViewPager.setCurrentItem(position);
+
+
         // if the file exists then we are loading that image in our image view.
        // if (imgFile.exists()) {
            //loadImage();
@@ -112,13 +110,6 @@ public class ImageDetailActivity extends AppCompatActivity {
 
     }
 
-    private void loadImage(){
-        File f = new File(imagePaths.get(position));
-
-        Bitmap bmp = BitmapFactory.decodeFile(f.getAbsolutePath());
-        imageView.setImageBitmap(bmp);
-        Picasso.get().load(imgFile).into(imageView);
-    }
 
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent) {
@@ -152,9 +143,10 @@ public class ImageDetailActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 this.finish();
-            case  R.id.action_share:
+                break;
+            case R.id.action_share:
                 shareImageToAnOntherApp();
-                return true;
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -168,7 +160,7 @@ public class ImageDetailActivity extends AppCompatActivity {
     }
 
     private void shareImageandText(Bitmap bitmap) {
-        Uri uri = getmageToShare(bitmap);
+        Uri uri = getImageToShare(bitmap);
         Intent intent = new Intent(Intent.ACTION_SEND);
 
         // putting uri of image to be shared
@@ -195,7 +187,7 @@ public class ImageDetailActivity extends AppCompatActivity {
     }
 
     // Retrieving the url to share
-    private Uri getmageToShare(Bitmap bitmap) {
+    private Uri getImageToShare(Bitmap bitmap) {
         File imagefolder = new File(getCacheDir(), "images");
         Uri uri = null;
         try {
@@ -212,10 +204,12 @@ public class ImageDetailActivity extends AppCompatActivity {
         return uri;
     }
 
-    private  void shareImageToAnOntherApp(){
-        imageView.invalidate();
-        BitmapDrawable bitmapDrawable = (BitmapDrawable) imageView.getDrawable();
-        Bitmap bitmap = bitmapDrawable.getBitmap();
+    private void shareImageToAnOntherApp(){
+        imageView = (ImageView)findViewById(R.id.ivImageDetail);
+
+        //imageView.invalidate();
+        Bitmap bitmap =((GlideBitmapDrawable)imageView.getDrawable()).getBitmap();
         shareImageandText(bitmap);
+
     }
 }

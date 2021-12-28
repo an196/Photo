@@ -9,5 +9,4 @@
     <item android:id="@+id/action_video"
         android:title="@string/menu_video"
         android:icon="@drawable/ic_video"/>
-
 </menu>

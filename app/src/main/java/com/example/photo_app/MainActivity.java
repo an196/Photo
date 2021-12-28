@@ -41,13 +41,11 @@ public class MainActivity extends AppCompatActivity implements  NavigationView.O
 
     public static ArrayList<VideoModel> videoArrayList;
     public static ArrayList<String> imagePaths;
-    public static int albumSeleted;
 
     @RequiresApi(api = Build.VERSION_CODES.S)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -98,6 +96,11 @@ public class MainActivity extends AppCompatActivity implements  NavigationView.O
         mBottomNavigationView.getMenu().findItem(R.id.action_gallery).setChecked(true);
         mNavigationView.setCheckedItem(R.id.nav_gallery);
         setTileToolbar();
+    }
+
+    @Override
+    protected  void onResume() {
+        super.onResume();
     }
 
     @Override

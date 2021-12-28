@@ -66,6 +66,7 @@ public class ViewPagerAdapter extends PagerAdapter {
                 .skipMemoryCache(true)
                 .into( imageView);
 
+        itemView.setTag(position);
         // Adding the View
         Objects.requireNonNull(container).addView(itemView);
 
@@ -74,7 +75,6 @@ public class ViewPagerAdapter extends PagerAdapter {
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
-
         container.removeView((RelativeLayout) object);
     }
 }
