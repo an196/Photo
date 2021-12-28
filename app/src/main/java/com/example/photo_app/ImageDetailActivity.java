@@ -19,10 +19,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
+import androidx.viewpager.widget.ViewPager;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.example.photo_app.helper.OnSwipeTouchListener;
+import com.example.photo_app.adapter.ViewPagerAdapter;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -40,9 +39,13 @@ public class ImageDetailActivity extends AppCompatActivity {
     private ScaleGestureDetector scaleGestureDetector;
     private ActionBar mActionBar;
     private File imgFile;
+
     // on below line we are defining our scale factor.
     private float mScaleFactor = 1.0f;
+    ViewPager mViewPager;
 
+    // Creating Object of ViewPagerAdapter
+    ViewPagerAdapter mViewPagerAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,8 +57,8 @@ public class ImageDetailActivity extends AppCompatActivity {
         // showing the back button in action bar
         mActionBar.setDisplayHomeAsUpEnabled(true);
 
-        // initializing our image view.
-        imageView = (ImageView) findViewById(R.id.idIVImage);
+
+
 
         // on below line we are initializing our scale gesture detector for zoom in and out for our image.
         scaleGestureDetector = new ScaleGestureDetector(this, new ScaleListener());
@@ -66,41 +69,45 @@ public class ImageDetailActivity extends AppCompatActivity {
         if( album != null)
             imagePaths = album;
 
-        imgFile = new File(imagePaths.get(position));
 
+        mViewPager = (ViewPager)findViewById(R.id.viewPagerImageDetail);
+        mViewPagerAdapter = new ViewPagerAdapter(ImageDetailActivity.this, imagePaths);
+
+        mViewPager.setAdapter(mViewPagerAdapter);
+        mViewPager.setCurrentItem(position);
         // if the file exists then we are loading that image in our image view.
-        if (imgFile.exists()) {
-           loadImage();
-            imageView.setOnTouchListener(new OnSwipeTouchListener(ImageDetailActivity.this){
-                public void onSwipeTop() {
-                }
-                public void onSwipeRight() {
-                    if(position > 0 ){
-                        position--;
-                        imgFile = new File(imagePaths.get(position));
-                        Glide.with(ImageDetailActivity.this).load(imgFile)
-                                .centerCrop()
-                                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                                .skipMemoryCache(true)
-                                .into(imageView);
-                    }
-                }
-                public void onSwipeLeft() {
-
-                    if(position < imagePaths.size() -1){
-                        position++;
-                        imgFile = new File(imagePaths.get(position));
-                        Glide.with(ImageDetailActivity.this).load("/"+imgFile)
-                                .centerCrop()
-                                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                                .skipMemoryCache(true)
-                                .into(imageView);
-                    }
-                }
-                public void onSwipeBottom() {
-                }
-            });
-        }
+       // if (imgFile.exists()) {
+           //loadImage();
+//            imageView.setOnTouchListener(new OnSwipeTouchListener(ImageDetailActivity.this){
+//                public void onSwipeTop() {
+//                }
+//                public void onSwipeRight() {
+//                    if(position > 0 ){
+//                        position--;
+//                        imgFile = new File(imagePaths.get(position));
+//                        Glide.with(ImageDetailActivity.this).load(imgFile)
+//                                .centerCrop()
+//                                .diskCacheStrategy(DiskCacheStrategy.NONE)
+//                                .skipMemoryCache(true)
+//                                .into(imageView);
+//                    }
+//                }
+//                public void onSwipeLeft() {
+//
+//                    if(position < imagePaths.size() -1){
+//                        position++;
+//                        imgFile = new File(imagePaths.get(position));
+//                        Glide.with(ImageDetailActivity.this).load("/"+imgFile)
+//                                .centerCrop()
+//                                .diskCacheStrategy(DiskCacheStrategy.NONE)
+//                                .skipMemoryCache(true)
+//                                .into(imageView);
+//                    }
+//                }
+//                public void onSwipeBottom() {
+//                }
+//            });
+//        }
 
 
     }

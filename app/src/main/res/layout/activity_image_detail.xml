@@ -3,14 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ImageDetailActivity">
 
-    <ImageView
-        android:id="@+id/idIVImage"
+    <!-- viewpager to show images -->
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/viewPagerImageDetail"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:layout_centerInParent="true"
-        android:scaleType="centerCrop"/>
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"/>
 
 </RelativeLayout>
