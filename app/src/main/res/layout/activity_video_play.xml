@@ -62,21 +62,25 @@
         android:background="@color/background"
         android:clickable="true"
         android:focusable="true"
-        android:gravity="bottom"
         android:orientation="horizontal"
-        android:paddingBottom="10dp">
+        android:paddingBottom="10dp"
+        android:gravity="center" >
 
         <ImageView
             android:id="@+id/prev"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
+            android:layout_gravity="center"
+            android:layout_weight="1"
             android:src="@drawable/ic_skip_previous_black_24dp"/>
 
         <ImageView
             android:id="@+id/pause"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
             android:src="@drawable/ic_play_circle_filled_black_24dp"/>
 
         <ImageView
@@ -84,6 +88,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
+            android:layout_gravity="center"
+            android:layout_weight="1"
             android:src="@drawable/ic_skip_next_black_24dp"/>
     </LinearLayout>
 </RelativeLayout>

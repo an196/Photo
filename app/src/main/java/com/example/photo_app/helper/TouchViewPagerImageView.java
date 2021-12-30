@@ -5,16 +5,19 @@ import android.content.Context;
 import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.widget.ImageView;
 
-@SuppressLint("AppCompatCustomView")
-public class TouchViewPagerIMageView extends ImageView {
+import androidx.annotation.Nullable;
 
-    Matrix matrix;
+@SuppressLint("AppCompatCustomView")
+public class TouchViewPagerImageView extends ImageView {
+
+    Matrix matrix ;
 
     // We can be in one of these 3 states
     static final int NONE = 0;
@@ -38,10 +41,16 @@ public class TouchViewPagerIMageView extends ImageView {
     ScaleGestureDetector mScaleDetector;
 
     Context context;
-    
 
-    public TouchViewPagerIMageView(Context context) {
+    public TouchViewPagerImageView(Context context) {
         super(context);
+        sharedConstructing(context);
+    }
+
+
+    public TouchViewPagerImageView(Context context, @Nullable AttributeSet attrs) {
+        super(context, attrs);
+        sharedConstructing(context);
     }
 
     private void sharedConstructing(Context context) {
@@ -181,6 +190,7 @@ public class TouchViewPagerIMageView extends ImageView {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+
         viewWidth = MeasureSpec.getSize(widthMeasureSpec);
         viewHeight = MeasureSpec.getSize(heightMeasureSpec);
 
@@ -209,6 +219,8 @@ public class TouchViewPagerIMageView extends ImageView {
             float scaleX = (float) viewWidth / (float) bmWidth;
             float scaleY = (float) viewHeight / (float) bmHeight;
             scale = Math.min(scaleX, scaleY);
+
+
             matrix.setScale(scale, scale);
 
             //Center the image

@@ -35,6 +35,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public RecyclerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // Inflate Layout in this method which we have created.
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_layout, parent, false);
+
         return new RecyclerViewHolder(view);
     }
 
