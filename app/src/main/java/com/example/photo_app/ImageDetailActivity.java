@@ -56,9 +56,6 @@ public class ImageDetailActivity extends AppCompatActivity {
         // showing the back button in action bar
         mActionBar.setDisplayHomeAsUpEnabled(true);
 
-        // on below line we are initializing our scale gesture detector for zoom in and out for our image.
-        scaleGestureDetector = new ScaleGestureDetector(this, new ScaleListener());
-
         // on below line getting data which we have passed from our adapter class.
         position = getIntent().getIntExtra("position", 0 );
         ArrayList<String> album = getIntent().getStringArrayListExtra("album" );
@@ -73,40 +70,6 @@ public class ImageDetailActivity extends AppCompatActivity {
         mViewPager.setCurrentItem(position);
 
 
-        // if the file exists then we are loading that image in our image view.
-       // if (imgFile.exists()) {
-           //loadImage();
-//            imageView.setOnTouchListener(new OnSwipeTouchListener(ImageDetailActivity.this){
-//                public void onSwipeTop() {
-//                }
-//                public void onSwipeRight() {
-//                    if(position > 0 ){
-//                        position--;
-//                        imgFile = new File(imagePaths.get(position));
-//                        Glide.with(ImageDetailActivity.this).load(imgFile)
-//                                .centerCrop()
-//                                .diskCacheStrategy(DiskCacheStrategy.NONE)
-//                                .skipMemoryCache(true)
-//                                .into(imageView);
-//                    }
-//                }
-//                public void onSwipeLeft() {
-//
-//                    if(position < imagePaths.size() -1){
-//                        position++;
-//                        imgFile = new File(imagePaths.get(position));
-//                        Glide.with(ImageDetailActivity.this).load("/"+imgFile)
-//                                .centerCrop()
-//                                .diskCacheStrategy(DiskCacheStrategy.NONE)
-//                                .skipMemoryCache(true)
-//                                .into(imageView);
-//                    }
-//                }
-//                public void onSwipeBottom() {
-//                }
-//            });
-//        }
-
 
     }
 
@@ -119,24 +82,6 @@ public class ImageDetailActivity extends AppCompatActivity {
         return true;
     }
 
-    private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
-        // on below line we are creating a class for our scale
-        // listener and extending it with gesture listener.
-        @Override
-        public boolean onScale(ScaleGestureDetector scaleGestureDetector) {
-
-            // inside on scale method we are setting scale
-            // for our image in our image view.
-            mScaleFactor *= scaleGestureDetector.getScaleFactor();
-            mScaleFactor = Math.max(0.1f, Math.min(mScaleFactor, 10.0f));
-
-            // on below line we are setting
-            // scale x and scale y to our image view.
-            imageView.setScaleX(mScaleFactor);
-            imageView.setScaleY(mScaleFactor);
-            return true;
-        }
-    }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
