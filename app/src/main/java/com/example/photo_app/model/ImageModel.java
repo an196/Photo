@@ -4,9 +4,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.provider.MediaStore;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class ImageModel {
+public class ImageModel  implements Serializable {
     private String title;
     private String path;
     private String size;
@@ -15,7 +16,7 @@ public class ImageModel {
     private double gpsLong;
 
     String str_folder;
-    ArrayList<String> al_imagepath;
+    ArrayList<ImageModel> al_imagepath;
 
     private ArrayList<ImageModel> ImageList = null;
 
@@ -83,11 +84,11 @@ public class ImageModel {
         this.str_folder = str_folder;
     }
 
-    public ArrayList<String> getAl_imagepath() {
+    public ArrayList<ImageModel> getAl_imagepath() {
         return al_imagepath;
     }
 
-    public void setAl_imagepath(ArrayList<String> al_imagepath) {
+    public void setAl_imagepath(ArrayList<ImageModel> al_imagepath) {
         this.al_imagepath = al_imagepath;
     }
 

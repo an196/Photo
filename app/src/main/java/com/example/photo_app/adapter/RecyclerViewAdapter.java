@@ -69,7 +69,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     Intent i = new Intent(context, ImageDetailActivity.class);
 
                     // on below line we are passing the image path to our new activity.
-                    i.putExtra("imgPath", imagePathArrayList.get(position).getPath());
+                    //i.putExtra("imgPath", imagePathArrayList.get(position).getPath());
                     i.putExtra("position", position);
                     // at last we are starting our activity.
                     context.startActivity(i);

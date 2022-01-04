@@ -33,8 +33,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private String _size;
     private String _date;
     private String _title;
-    private double _latitude = 10.762622;
-    private double _longitude = 106.660172;
+    private double _latitude; //10.762622
+    private double _longitude; //106.660172
     private String exifAttribute;
     TextView textView1, textView2, textView3;
     private boolean valid = false;
@@ -124,6 +124,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 }
             };
+
             File imgFile = new File("//" + _path);
 
             Picasso.get()
@@ -178,8 +179,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         myAttribute += getTagString(ExifInterface.TAG_MODEL, exif);
         myAttribute += getTagString(ExifInterface.TAG_ORIENTATION, exif);
         myAttribute += getTagString(ExifInterface.TAG_WHITE_BALANCE, exif);
-
-
 
 
         return myAttribute;

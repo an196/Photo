@@ -1,5 +1,7 @@
 package com.example.photo_app;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -20,9 +22,11 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
 import com.example.photo_app.adapter.ViewPagerAdapter;
+import com.example.photo_app.model.ImageModel;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.photo_app.MainActivity.imagePaths;
@@ -56,9 +60,12 @@ public class ImageDetailActivity extends AppCompatActivity {
 
         // on below line getting data which we have passed from our adapter class.
         position = getIntent().getIntExtra("position", 0 );
-        //ArrayList<String> album = getIntent().getStringArrayListExtra("album" );
-//        if( album != null)
-//            imagePaths = album;
+
+        ArrayList<ImageModel> album = (ArrayList<ImageModel>) getIntent().getSerializableExtra("album" );;
+
+        if( album != null)
+
+            imagePaths = album;
 
 
         mViewPager = (ViewPager)findViewById(R.id.viewPagerImageDetail);
@@ -68,15 +75,6 @@ public class ImageDetailActivity extends AppCompatActivity {
         mViewPager.setCurrentItem(position);
 
     }
-
-//
-//    @Override
-//    public boolean onTouchEvent(MotionEvent motionEvent) {
-//        // inside on touch event method we are calling on
-//        // touch event method and pasing our motion event to it.
-//        scaleGestureDetector.onTouchEvent(motionEvent);
-//        return true;
-//    }
 
 
     @Override
@@ -90,6 +88,9 @@ public class ImageDetailActivity extends AppCompatActivity {
                 break;
             case R.id.action_info:
                 loadInformationImage();
+                break;
+            case R.id.action_delete:
+                showDialogDelete();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -167,5 +168,42 @@ public class ImageDetailActivity extends AppCompatActivity {
         intent.putExtra("longitude", imagePaths.get(mViewPager.getCurrentItem()).getGpsLong());
         intent.putExtra("size", imagePaths.get(mViewPager.getCurrentItem()).getSize());
         startActivity(intent);
+    }
+
+
+
+    private void showDialogDelete(){
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        //Yes button clicked
+                        deleteImage();
+                        break;
+
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        //No button clicked
+                        break;
+                }
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(ImageDetailActivity.this);
+        builder.setMessage("Do you really want to delete this photo?")
+                .setPositiveButton("Yes", dialogClickListener)
+                .setNegativeButton("No", dialogClickListener).show();
+    }
+
+    private void deleteImage(){
+        File file = new File(android.os.Environment.getExternalStorageDirectory()+
+                imagePaths.get(mViewPager.getCurrentItem()).getPath());
+
+        if(file.exists())
+        {
+            file.delete();
+            Toast.makeText(getApplicationContext(), "delete" +
+                    imagePaths.get(mViewPager.getCurrentItem()).getPath(), Toast.LENGTH_SHORT).show();
+        }
     }
 }

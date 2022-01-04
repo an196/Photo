@@ -1,4 +1,5 @@
 package com.example.photo_app.ui.album;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,7 +19,6 @@ import com.example.photo_app.adapter.Adapter_PhotosFolder;
 import com.example.photo_app.databinding.FragmentAlbumBinding;
 import com.example.photo_app.model.AlbumModel;
 import com.example.photo_app.model.ImageModel;
-import com.example.photo_app.model.Model_images;
 
 import java.util.ArrayList;
 

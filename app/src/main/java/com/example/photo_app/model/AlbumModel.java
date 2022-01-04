@@ -45,14 +45,18 @@ public class AlbumModel {
 
             if (boolean_folder) {
 
-                ArrayList<String> al_path = new ArrayList<>();
+                ArrayList<ImageModel> al_path = new ArrayList<>();
                 al_path.addAll(al_images.get(int_position).getAl_imagepath());
-                al_path.add(absolutePathOfImage);
+                ImageModel imageModel = new ImageModel();
+                imageModel.setPath(absolutePathOfImage);
+                al_path.add( imageModel);
                 al_images.get(int_position).setAl_imagepath(al_path);
 
             } else {
-                ArrayList<String> al_path = new ArrayList<>();
-                al_path.add(absolutePathOfImage);
+                ArrayList<ImageModel> al_path = new ArrayList<>();
+                ImageModel imageModel = new ImageModel();
+                imageModel.setPath(absolutePathOfImage);
+                al_path.add(imageModel);
                 ImageModel obj_model = new ImageModel();
                 obj_model.setStr_folder(cursor.getString(column_index_folder_name));
                 obj_model.setAl_imagepath(al_path);
@@ -65,7 +69,7 @@ public class AlbumModel {
         for (int i = 0; i < al_images.size(); i++) {
             Log.e("FOLDER", al_images.get(i).getStr_folder());
             for (int j = 0; j < al_images.get(i).getAl_imagepath().size(); j++) {
-                Log.e("FILE", al_images.get(i).getAl_imagepath().get(j));
+                Log.e("FILE", al_images.get(i).getAl_imagepath().get(j).getPath());
             }
         }
         return al_images;

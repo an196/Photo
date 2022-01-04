@@ -12,5 +12,6 @@
     <string name="menu_video">Video</string>
     <string name="nav_top_share">Share</string>
     <string name="nav_top_info">Info</string>
+    <string name="nav_top_delete">Delete</string>
     <string name="title_activity_maps">MapsActivity</string>
 </resources>

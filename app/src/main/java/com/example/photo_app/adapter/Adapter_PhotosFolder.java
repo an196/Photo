@@ -80,7 +80,7 @@ public class Adapter_PhotosFolder extends ArrayAdapter<ImageModel> {
 
 
 
-        Glide.with(context).load("file://" + al_menu.get(position).getAl_imagepath().get(0))
+        Glide.with(context).load("file://" + al_menu.get(position).getAl_imagepath().get(0).getPath())
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .skipMemoryCache(true)
                 .into(viewHolder.iv_image);

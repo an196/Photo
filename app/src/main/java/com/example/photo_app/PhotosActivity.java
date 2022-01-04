@@ -12,6 +12,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.photo_app.adapter.GridViewAdapter;
+import com.example.photo_app.model.ImageModel;
 import com.example.photo_app.ui.album.AlbumFragment;
 
 import java.util.ArrayList;
@@ -45,18 +46,17 @@ public class PhotosActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id)
             {
-                ArrayList<String> album =  AlbumFragment.al_images.get(int_position)
+                ArrayList<ImageModel> album =  AlbumFragment.al_images.get(int_position)
                         .getAl_imagepath();
-
 
                 // inside on click listener we are creating a new intent
                 Intent i = new Intent(PhotosActivity.this, ImageDetailActivity.class);
 
                 // on below line we are passing the image path to our new activity.
-                i.putExtra("album", album);
+                i.putExtra("album", (ArrayList<ImageModel>) album);
                 i.putExtra("position", position);
                 // at last we are starting our activity.
-                PhotosActivity.this.startActivity(i);
+                startActivity(i);
             }
         });
     }
