@@ -17,6 +17,7 @@ import com.example.photo_app.R;
 import com.example.photo_app.adapter.Adapter_PhotosFolder;
 import com.example.photo_app.databinding.FragmentAlbumBinding;
 import com.example.photo_app.model.AlbumModel;
+import com.example.photo_app.model.ImageModel;
 import com.example.photo_app.model.Model_images;
 
 import java.util.ArrayList;
@@ -26,7 +27,7 @@ public class AlbumFragment extends Fragment {
     private AlbumViewModel albumViewModel;
     private FragmentAlbumBinding binding;
 
-    public static ArrayList<Model_images> al_images;
+    public static ArrayList<ImageModel> al_images;
     private Adapter_PhotosFolder obj_adapter;
     private GridView gv_folder;
     private AlbumModel albumModel;

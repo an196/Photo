@@ -18,6 +18,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.photo_app.databinding.ActivityMainBinding;
+import com.example.photo_app.model.ImageModel;
 import com.example.photo_app.model.VideoModel;
 import com.example.photo_app.ui.album.AlbumFragment;
 import com.example.photo_app.ui.gallery.GalleryFragment;
@@ -40,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements  NavigationView.O
     private  int currentFragment = FRAGMENT_HOME;
 
     public static ArrayList<VideoModel> videoArrayList;
-    public static ArrayList<String> imagePaths;
+    public static ArrayList<ImageModel> imagePaths;
 
     @RequiresApi(api = Build.VERSION_CODES.S)
     @Override

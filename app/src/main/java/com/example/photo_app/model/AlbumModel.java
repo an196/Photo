@@ -9,10 +9,10 @@ import android.util.Log;
 import java.util.ArrayList;
 
 public class AlbumModel {
-    public static ArrayList<Model_images> al_images = new ArrayList<>();
+    public static ArrayList<ImageModel> al_images = new ArrayList<>();
     boolean boolean_folder;
 
-    public ArrayList<Model_images> getAllAlbum(Context context)   {
+    public ArrayList<ImageModel> getAllAlbum(Context context)   {
         int int_position = 0;
         Uri uri;
         Cursor cursor;
@@ -53,7 +53,7 @@ public class AlbumModel {
             } else {
                 ArrayList<String> al_path = new ArrayList<>();
                 al_path.add(absolutePathOfImage);
-                Model_images obj_model = new Model_images();
+                ImageModel obj_model = new ImageModel();
                 obj_model.setStr_folder(cursor.getString(column_index_folder_name));
                 obj_model.setAl_imagepath(al_path);
 

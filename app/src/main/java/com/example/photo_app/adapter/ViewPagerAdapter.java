@@ -13,6 +13,7 @@ import androidx.viewpager.widget.PagerAdapter;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.photo_app.R;
+import com.example.photo_app.model.ImageModel;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -24,14 +25,14 @@ public class ViewPagerAdapter extends PagerAdapter {
     Context context;
 
     // Array of images
-    ArrayList<String> images;
+    ArrayList<ImageModel> images;
 
     // Layout Inflater
     LayoutInflater mLayoutInflater;
 
 
     // Viewpager Constructor
-    public ViewPagerAdapter(Context context, ArrayList<String> images) {
+    public ViewPagerAdapter(Context context, ArrayList<ImageModel> images) {
         this.context = context;
         this.images = images;
         mLayoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -58,7 +59,7 @@ public class ViewPagerAdapter extends PagerAdapter {
         ImageView imageView = (ImageView) itemView.findViewById(R.id.ivImageDetail);
 
 
-        File imgFile = new File(images.get(position));
+        File imgFile = new File(images.get(position).getPath());
         // setting the image in the imageView
         Glide.with(context).load("/"+ imgFile)
                 .centerCrop()

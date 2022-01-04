@@ -12,18 +12,18 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.photo_app.R;
-import com.example.photo_app.model.Model_images;
+import com.example.photo_app.model.ImageModel;
 
 import java.util.ArrayList;
 
-public class GridViewAdapter extends ArrayAdapter<Model_images> {
+public class GridViewAdapter extends ArrayAdapter<ImageModel> {
     Context context;
     ViewHolder viewHolder;
-    ArrayList<Model_images> al_menu = new ArrayList<>();
+    ArrayList<ImageModel> al_menu = new ArrayList<>();
     int int_position;
 
 
-    public GridViewAdapter(Context context, ArrayList<Model_images> al_menu, int int_position) {
+    public GridViewAdapter(Context context, ArrayList<ImageModel> al_menu, int int_position) {
         super(context, R.layout.adapter_photosfolder, al_menu);
         this.al_menu = al_menu;
         this.context = context;

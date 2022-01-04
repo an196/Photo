@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -24,7 +23,6 @@ import com.example.photo_app.adapter.ViewPagerAdapter;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.photo_app.MainActivity.imagePaths;
@@ -58,9 +56,9 @@ public class ImageDetailActivity extends AppCompatActivity {
 
         // on below line getting data which we have passed from our adapter class.
         position = getIntent().getIntExtra("position", 0 );
-        ArrayList<String> album = getIntent().getStringArrayListExtra("album" );
-        if( album != null)
-            imagePaths = album;
+        //ArrayList<String> album = getIntent().getStringArrayListExtra("album" );
+//        if( album != null)
+//            imagePaths = album;
 
 
         mViewPager = (ViewPager)findViewById(R.id.viewPagerImageDetail);
@@ -69,18 +67,16 @@ public class ImageDetailActivity extends AppCompatActivity {
         mViewPager.setAdapter(mViewPagerAdapter);
         mViewPager.setCurrentItem(position);
 
-
-
     }
 
-
-    @Override
-    public boolean onTouchEvent(MotionEvent motionEvent) {
-        // inside on touch event method we are calling on
-        // touch event method and pasing our motion event to it.
-        scaleGestureDetector.onTouchEvent(motionEvent);
-        return true;
-    }
+//
+//    @Override
+//    public boolean onTouchEvent(MotionEvent motionEvent) {
+//        // inside on touch event method we are calling on
+//        // touch event method and pasing our motion event to it.
+//        scaleGestureDetector.onTouchEvent(motionEvent);
+//        return true;
+//    }
 
 
     @Override
@@ -91,6 +87,9 @@ public class ImageDetailActivity extends AppCompatActivity {
                 break;
             case R.id.action_share:
                 shareImageToAnOntherApp();
+                break;
+            case R.id.action_info:
+                loadInformationImage();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -156,5 +155,17 @@ public class ImageDetailActivity extends AppCompatActivity {
         Bitmap bitmap =((GlideBitmapDrawable)imageView.getDrawable()).getBitmap();
         shareImageandText(bitmap);
 
+    }
+
+    private  void loadInformationImage(){
+        Intent intent =new Intent(ImageDetailActivity.this, MapsActivity.class);
+
+        intent.putExtra("path", imagePaths.get(mViewPager.getCurrentItem()).getPath());
+        intent.putExtra("title", imagePaths.get(mViewPager.getCurrentItem()).getTitle());
+        intent.putExtra("date", imagePaths.get(mViewPager.getCurrentItem()).getDate());
+        intent.putExtra("latitude", imagePaths.get(mViewPager.getCurrentItem()).getGpsLat());
+        intent.putExtra("longitude", imagePaths.get(mViewPager.getCurrentItem()).getGpsLong());
+        intent.putExtra("size", imagePaths.get(mViewPager.getCurrentItem()).getSize());
+        startActivity(intent);
     }
 }

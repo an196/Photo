@@ -14,6 +14,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.photo_app.ImageDetailActivity;
 import com.example.photo_app.R;
+import com.example.photo_app.model.ImageModel;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -22,10 +23,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     // creating a variable for our context and array list.
     private  Context context;
-    private  ArrayList<String> imagePathArrayList;
+    private  ArrayList<ImageModel> imagePathArrayList;
 
     // on below line we have created a constructor.
-    public RecyclerViewAdapter(Context context, ArrayList<String> imagePathArrayList) {
+    public RecyclerViewAdapter(Context context, ArrayList<ImageModel> imagePathArrayList) {
         this.context = context;
         this.imagePathArrayList = imagePathArrayList;
     }
@@ -44,7 +45,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         int position =  avd;
         // on below line we are getting th file from the
         // path which we have stored in our list.
-        File imgFile = new File(imagePathArrayList.get(position));
+        File imgFile = new File(imagePathArrayList.get(position).getPath());
 
         // on below line we are checking if tje file exists or not.
 
@@ -68,7 +69,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     Intent i = new Intent(context, ImageDetailActivity.class);
 
                     // on below line we are passing the image path to our new activity.
-                    i.putExtra("imgPath", imagePathArrayList.get(position));
+                    i.putExtra("imgPath", imagePathArrayList.get(position).getPath());
                     i.putExtra("position", position);
                     // at last we are starting our activity.
                     context.startActivity(i);

@@ -6,7 +6,11 @@
         android:icon="@drawable/ic_share_24"
         android:title="@string/nav_top_share"
         app:showAsAction="ifRoom" />
-
+    <item
+        android:id="@+id/action_info"
+        android:icon="@drawable/ic_baseline_info_24"
+        android:title="@string/nav_top_info"
+        app:showAsAction="ifRoom" />
 <!--    <item-->
 <!--        android:id="@+id/more"-->
 <!--        android:title="@string/more"-->

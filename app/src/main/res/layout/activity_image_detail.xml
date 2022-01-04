@@ -10,6 +10,6 @@
         android:id="@+id/viewPagerImageDetail"
         android:layout_width="match_parent"
         android:layout_height="500dp"
-        android:layout_centerInParent="true"/>
+        android:layout_centerInParent="true" />
 
 </RelativeLayout>
