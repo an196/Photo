@@ -6,6 +6,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
+    app:cardCornerRadius="5dp"
     android:elevation="8dp">
 
     <!--Image view for displaying the image
@@ -16,6 +17,6 @@
         android:layout_height="140dp"
         android:layout_gravity="center"
         android:scaleType="centerCrop"
-        tools:ignore="ImageContrastCheck" />
+        android:src="@drawable/ic_launcher_foreground" />
 
 </androidx.cardview.widget.CardView>

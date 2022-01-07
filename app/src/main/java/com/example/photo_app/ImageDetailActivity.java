@@ -6,8 +6,13 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ScaleGestureDetector;
@@ -20,11 +25,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 import androidx.viewpager.widget.ViewPager;
 
-import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
 import com.example.photo_app.adapter.ViewPagerAdapter;
 import com.example.photo_app.model.ImageModel;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -152,10 +158,19 @@ public class ImageDetailActivity extends AppCompatActivity {
     private void shareImageToAnOntherApp(){
         imageView = (ImageView)findViewById(R.id.ivImageDetail);
 
-        //imageView.invalidate();
-        Bitmap bitmap =((GlideBitmapDrawable)imageView.getDrawable()).getBitmap();
-        shareImageandText(bitmap);
 
+
+        Bitmap bitmap = null;
+        try {
+            File f = new File(imagePaths.get(mViewPager.getCurrentItem()).getPath());
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+            bitmap =   BitmapFactory.decodeStream(new FileInputStream(f), null, options);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        shareImageandText(bitmap);
+        imageView.invalidate();
     }
 
     private  void loadInformationImage(){
@@ -196,14 +211,39 @@ public class ImageDetailActivity extends AppCompatActivity {
     }
 
     private void deleteImage(){
-        File file = new File(android.os.Environment.getExternalStorageDirectory()+
-                imagePaths.get(mViewPager.getCurrentItem()).getPath());
+        String path = imagePaths.get(mViewPager.getCurrentItem()).getPath();
+        File file = new File(path);
 
-        if(file.exists())
-        {
-            file.delete();
-            Toast.makeText(getApplicationContext(), "delete" +
-                    imagePaths.get(mViewPager.getCurrentItem()).getPath(), Toast.LENGTH_SHORT).show();
+
+        Toast.makeText( this, path, Toast.LENGTH_SHORT).show();
+        File fdelete = new File(path);
+        if (fdelete.exists()) {
+            if (fdelete.delete()) {
+                Log.e("-->", "file Deleted :" + path);
+                callBroadCast();
+            } else {
+                Log.e("-->", "file not Deleted :" + path);
+            }
+        }
+    }
+
+    public void callBroadCast() {
+        if (Build.VERSION.SDK_INT >= 14) {
+            Log.e("-->", " >= 14");
+            MediaScannerConnection.scanFile(this, new String[]{Environment.getExternalStorageDirectory().toString()}, null, new MediaScannerConnection.OnScanCompletedListener() {
+                /*
+                 *   (non-Javadoc)
+                 * @see android.media.MediaScannerConnection.OnScanCompletedListener#onScanCompleted(java.lang.String, android.net.Uri)
+                 */
+                public void onScanCompleted(String path, Uri uri) {
+                    Log.e("ExternalStorage", "Scanned " + path + ":");
+                    Log.e("ExternalStorage", "-> uri=" + uri);
+                }
+            });
+        } else {
+            Log.e("-->", " < 14");
+            sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED,
+                    Uri.parse("file://" + Environment.getExternalStorageDirectory())));
         }
     }
 }

@@ -104,7 +104,7 @@ public class ImageModel  implements Serializable {
         final String[] columns = {MediaStore.Images.Media.DATA,
                 MediaStore.Images.Media._ID,
                 MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
-                MediaStore.Images.Media.DATE_TAKEN,
+                MediaStore.Images.Media.DATE_ADDED,
                 MediaStore.Images.Media.LATITUDE,
                 MediaStore.Images.Media.LONGITUDE,
                 MediaStore.Images.Media.TITLE,
@@ -112,7 +112,7 @@ public class ImageModel  implements Serializable {
 
         // on below line we are creating a new
         // string to order our images by string.
-        final String orderBy = MediaStore.Images.Media.DATE_TAKEN + " DESC";
+        final String orderBy = MediaStore.Images.Media.DATE_ADDED + " DESC";
 
         // this method will stores all the images
         // from the gallery in Cursor
@@ -129,7 +129,7 @@ public class ImageModel  implements Serializable {
                 // on below line we are getting image file path
                 String dataColumnIndex = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA));
                 String titleColumnIndex = cursor.getString(cursor.getColumnIndexOrThrow( MediaStore.Images.Media.TITLE));
-                String dateColumnIndex = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_TAKEN));
+                String dateColumnIndex = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_ADDED));
                 double latColumnIndex = cursor.getDouble(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.LATITUDE));
                 double longColumnIndex = cursor.getDouble(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.LONGITUDE));
                 String sizeColumnIndex = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.SIZE));

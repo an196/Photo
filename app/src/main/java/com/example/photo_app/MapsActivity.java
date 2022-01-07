@@ -33,8 +33,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private String _size;
     private String _date;
     private String _title;
-    private double _latitude; //10.762622
-    private double _longitude; //106.660172
+    private double _latitude = 10.762622; //
+    private double _longitude = 106.660172; //106.660172
     private String exifAttribute;
     TextView textView1, textView2, textView3;
     private boolean valid = false;
@@ -95,7 +95,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        if (valid) {
+//        if (valid) {
             //Add a marker in Sydney and move the camera
             LatLng sydney = new LatLng(_latitude, _longitude);
 
@@ -134,7 +134,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     .transform(new BubbleTransformation(20))
                     .into(mTarget);
 
-        }
+//        }
     }
 
 
@@ -210,7 +210,5 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         result = new Float(FloatD + (FloatM / 60) + (FloatS / 3600));
 
         return result;
-
-
     };
 }
