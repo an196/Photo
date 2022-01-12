@@ -6,12 +6,13 @@ import android.provider.MediaStore;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 
-public class ImageModel  implements Serializable {
+public class ImageModel implements Serializable {
     private String title;
     private String path;
     private String size;
-    private String date;
+    private Date date;
     private double gpsLat;
     private double gpsLong;
 
@@ -29,7 +30,7 @@ public class ImageModel  implements Serializable {
         this.title = title;
     }
 
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
 
@@ -41,7 +42,7 @@ public class ImageModel  implements Serializable {
         this.size = size;
     }
 
-    public void setDate(String date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 
@@ -129,7 +130,7 @@ public class ImageModel  implements Serializable {
                 // on below line we are getting image file path
                 String dataColumnIndex = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA));
                 String titleColumnIndex = cursor.getString(cursor.getColumnIndexOrThrow( MediaStore.Images.Media.TITLE));
-                String dateColumnIndex = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_ADDED));
+                Date dateColumnIndex = new Date(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_ADDED));
                 double latColumnIndex = cursor.getDouble(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.LATITUDE));
                 double longColumnIndex = cursor.getDouble(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.LONGITUDE));
                 String sizeColumnIndex = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.SIZE));
@@ -154,4 +155,6 @@ public class ImageModel  implements Serializable {
         }
         return ImageList;
     }
+
+
 }

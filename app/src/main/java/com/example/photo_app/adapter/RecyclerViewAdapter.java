@@ -1,100 +1,89 @@
 package com.example.photo_app.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.example.photo_app.ImageDetailActivity;
 import com.example.photo_app.R;
+import com.example.photo_app.helper.GallerySection;
 import com.example.photo_app.model.ImageModel;
 
-import java.io.File;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.RecyclerViewHolder> {
 
-    // creating a variable for our context and array list.
-    private  Context context;
-    private  ArrayList<ImageModel> imagePathArrayList;
+    private Context context;
+    private List<GallerySection> sectionList;
+    private ArrayList<ImageModel> images;
 
     // on below line we have created a constructor.
-    public RecyclerViewAdapter(Context context, ArrayList<ImageModel> imagePathArrayList) {
+    public RecyclerViewAdapter(Context context, List<GallerySection> sectionList, ArrayList<ImageModel> images ) {
         this.context = context;
-        this.imagePathArrayList = imagePathArrayList;
+        this.sectionList = sectionList;
+        this.images = images;
     }
 
     @NonNull
     @Override
     public RecyclerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // Inflate Layout in this method which we have created.
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_layout, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.section_gallery_row, parent, false);
 
         return new RecyclerViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerViewHolder holder, int avd) {
-        int position =  avd;
-        // on below line we are getting th file from the
-        // path which we have stored in our list.
-        File imgFile = new File(imagePathArrayList.get(position).getPath());
+    public void onBindViewHolder(@NonNull RecyclerViewHolder holder, int position) {
+        GallerySection section = sectionList.get(position);
 
-        // on below line we are checking if tje file exists or not.
-
-        if (imgFile.exists()) {
-
-            // if the file exists then we are displaying that file in our image view using picasso library.
-            //Bitmap myBitmap = BitmapFactory.decodeFile("/"+imgFile);
-            Glide.with(context).load("/"+imgFile)
-                    .centerCrop()
-                    .diskCacheStrategy(DiskCacheStrategy.NONE)
-                    .skipMemoryCache(true)
-                    .into( holder.imageIV);
-            //holder.imageIV.setImageBitmap(myBitmap);
-
-            // on below line we are adding click listener to our item of recycler view.
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    // inside on click listener we are creating a new intent
-                    Intent i = new Intent(context, ImageDetailActivity.class);
-
-                    // on below line we are passing the image path to our new activity.
-                    //i.putExtra("imgPath", imagePathArrayList.get(position).getPath());
-                    i.putExtra("position", position);
-                    // at last we are starting our activity.
-                    context.startActivity(i);
-                }
-            });
+        SimpleDateFormat format = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzzz yyyy");
+        Date newDate = null;
+        try {
+            newDate = format.parse( section.getDate().toString());
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
+        format = new SimpleDateFormat("dd-MM-yyyy");
+        String dateSection = format.format(newDate);
+
+
+        List<ImageModel> items = section.getSectionItems();
+
+        holder.sectionGalleryTextView.setText(dateSection);
+        ChildRecyclerAdapter childRecyclerAdapter = new ChildRecyclerAdapter(items,images);
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(context.getApplicationContext(), 3);
+        holder.childRecyclerView.setLayoutManager(layoutManager);
+        holder.childRecyclerView.setAdapter(childRecyclerAdapter);
+
     }
 
     @Override
     public int getItemCount() {
-        // this method returns
-        // the size of recyclerview
-        return imagePathArrayList.size();
+
+        return sectionList.size();
     }
 
     // View Holder Class to handle Recycler View.
     public static class RecyclerViewHolder extends RecyclerView.ViewHolder {
+        TextView sectionGalleryTextView;
+        RecyclerView childRecyclerView;
 
-        // creating variables for our views.
-        private final ImageView imageIV;
+
 
         public RecyclerViewHolder(@NonNull View itemView) {
             super(itemView);
-            // initializing our views with their ids.
-            imageIV = (ImageView) itemView.findViewById(R.id.idCIVImage);
+
+            sectionGalleryTextView = itemView.findViewById(R.id.sectionGalleryTextView);
+            childRecyclerView = itemView.findViewById(R.id.childRecyclerView);
         }
     }
 }
