@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.widget.TextView;
 
 import androidx.fragment.app.FragmentActivity;
@@ -39,6 +40,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     TextView textView1, textView2, textView3;
     private boolean valid = false;
 
+    private Handler loadMap = new Handler();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,33 +56,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         mapFragment.getMapAsync(this);
 
+        Thread myBackgroundThread = new Thread( backgroundTask, "load map service");
+        myBackgroundThread.start();
 
-        _path = getIntent().getStringExtra("path");
-        _title = getIntent().getStringExtra("title");
-        _date = getIntent().getStringExtra("date");
-        _size = getIntent().getStringExtra("size");
-
-        getIntent().getDoubleExtra("latitude", _latitude);
-        getIntent().getDoubleExtra("longitude", _longitude);
-
-
-        textView1 = (TextView) findViewById(R.id.tv_img_title);
-
-
-        exifAttribute = null;
-        File f = new File(_path);
-        if (f.exists()) {
-            ExifInterface exif = null;
-            try {
-                exif = new ExifInterface(_path);
-                exifAttribute = getExif(exif);
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        textView1.setText(exifAttribute);
     }
 
     /**
@@ -95,48 +74,47 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
+
 //        if (valid) {
-            //Add a marker in Sydney and move the camera
-            LatLng sydney = new LatLng(_latitude, _longitude);
+        //Add a marker in Sydney and move the camera
+        LatLng sydney = new LatLng(_latitude, _longitude);
 
-            Target mTarget = new Target() {
-                @Override
-                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                    Marker driver_marker = mMap.addMarker(new MarkerOptions()
-                            .position(sydney)
-                            .icon(BitmapDescriptorFactory.fromBitmap(bitmap))
-                            .title("test")
-                            .snippet("test address")
-                    );
-                    mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        Target mTarget = new Target() {
+            @Override
+            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                Marker driver_marker = mMap.addMarker(new MarkerOptions()
+                        .position(sydney)
+                        .icon(BitmapDescriptorFactory.fromBitmap(bitmap))
+                        .title("test")
+                        .snippet("test address")
+                );
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
 
-                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(_latitude, _longitude), 15.0f));
-                }
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(_latitude, _longitude), 15.0f));
+            }
 
-                @Override
-                public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+            @Override
+            public void onBitmapFailed(Exception e, Drawable errorDrawable) {
 
-                }
+            }
 
-                @Override
-                public void onPrepareLoad(Drawable placeHolderDrawable) {
+            @Override
+            public void onPrepareLoad(Drawable placeHolderDrawable) {
 
-                }
-            };
+            }
+        };
 
-            File imgFile = new File("//" + _path);
+        File imgFile = new File("//" + _path);
 
-            Picasso.get()
-                    .load(imgFile)
-                    .resize(250, 250)
-                    .centerCrop()
-                    .transform(new BubbleTransformation(20))
-                    .into(mTarget);
+        Picasso.get()
+                .load(imgFile)
+                .resize(250, 250)
+                .centerCrop()
+                .transform(new BubbleTransformation(20))
+                .into(mTarget);
 
 //        }
     }
-
-
 
 
     private String getExif(ExifInterface exif) {
@@ -170,7 +148,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         myAttribute += "Decription : " + exif.getAttribute(ExifInterface.TAG_IMAGE_DESCRIPTION) + "\n";
         myAttribute += getTagString(ExifInterface.TAG_FLASH, exif);
         myAttribute += ExifInterface.TAG_GPS_DEST_LATITUDE + " : " + _latitude + "\n";
-        myAttribute +=  ExifInterface.TAG_GPS_DEST_LATITUDE + " : "+ _longitude + "\n";
+        myAttribute += ExifInterface.TAG_GPS_DEST_LATITUDE + " : " + _longitude + "\n";
         myAttribute += getTagString(ExifInterface.TAG_MAKE, exif);
         myAttribute += getTagString(ExifInterface.TAG_MODEL, exif);
         myAttribute += getTagString(ExifInterface.TAG_ORIENTATION, exif);
@@ -206,5 +184,37 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         result = new Float(FloatD + (FloatM / 60) + (FloatS / 3600));
 
         return result;
+    };
+
+    private Runnable backgroundTask = new Runnable() {
+        @Override
+        public void run() {
+            _path = getIntent().getStringExtra("path");
+            _title = getIntent().getStringExtra("title");
+            _date = getIntent().getStringExtra("date");
+            _size = getIntent().getStringExtra("size");
+
+            getIntent().getDoubleExtra("latitude", _latitude);
+            getIntent().getDoubleExtra("longitude", _longitude);
+
+
+            textView1 = (TextView) findViewById(R.id.tv_img_title);
+
+
+            exifAttribute = null;
+            File f = new File(_path);
+            if (f.exists()) {
+                ExifInterface exif = null;
+                try {
+                    exif = new ExifInterface(_path);
+                    exifAttribute = getExif(exif);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            textView1.setText(exifAttribute);
+        }
     };
 }
