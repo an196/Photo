@@ -118,7 +118,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 }
 
-
                 @Override
                 public void onPrepareLoad(Drawable placeHolderDrawable) {
 
@@ -138,10 +137,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
-    private void load() throws IOException {
-        File imgFile = new File(_path);
-        ExifInterface exif = new ExifInterface(_path);
-    }
+
 
     private String getExif(ExifInterface exif) {
         String attrLATITUDE = exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE);

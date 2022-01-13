@@ -56,15 +56,15 @@ public class ChildRecyclerAdapter extends RecyclerView.Adapter<ChildRecyclerAdap
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int idnex = 0;
+                    int index = 0;
                     for (ImageModel image: images){
                         if(image.getPath() == items.get(position).getPath()){
-                            idnex = images.indexOf(image);
+                            index = images.indexOf(image);
                         }
                     }
                     Intent i = new Intent(context, ImageDetailActivity.class);
-                    i.putExtra("position", idnex);
-
+                    i.putExtra("position", index);
+                    i.putExtra("images", images);
                     context.startActivity(i);
                 }
             });

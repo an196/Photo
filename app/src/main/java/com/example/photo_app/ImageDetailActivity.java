@@ -67,7 +67,7 @@ public class ImageDetailActivity extends AppCompatActivity {
         // on below line getting data which we have passed from our adapter class.
         position = getIntent().getIntExtra("position", 0 );
 
-        ArrayList<ImageModel> album = (ArrayList<ImageModel>) getIntent().getSerializableExtra("album" );;
+        ArrayList<ImageModel> album = (ArrayList<ImageModel>) getIntent().getSerializableExtra("images" );;
 
         if( album != null)
 
