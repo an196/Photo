@@ -13,7 +13,12 @@ android {
         versionCode 1
         versionName "1.0"
 
+        renderscriptTargetApi 28
+
+        renderscriptSupportModeEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+
     }
 
     buildTypes {
@@ -49,5 +54,23 @@ dependencies {
 
     implementation 'androidx.core:core-splashscreen:1.0.0-alpha01'
     implementation 'com.squareup.picasso:picasso:2.71828'
-    implementation 'com.github.bumptech.glide:glide:3.7.0'
+
+
+    // DS Photo Editor SDK
+
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation(name:'ds-photo-editor-sdk-v10', ext:'aar')
+
+
+
+    // SDK related dependencies
+
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.0'
+
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
+
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
+
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
 }

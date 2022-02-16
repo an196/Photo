@@ -25,6 +25,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 import androidx.viewpager.widget.ViewPager;
 
+import com.dsphotoeditor.sdk.activity.DsPhotoEditorActivity;
+import com.dsphotoeditor.sdk.utils.DsPhotoEditorConstants;
 import com.example.photo_app.adapter.ViewPagerAdapter;
 import com.example.photo_app.model.ImageModel;
 
@@ -37,7 +39,8 @@ import java.util.List;
 
 import static com.example.photo_app.MainActivity.imagePaths;
 public class ImageDetailActivity extends AppCompatActivity {
-
+    int IMAGE_REQUEST_CODE = 45;
+    int RESULT_CODE = 200;
     // creating a string variable, image view variable
     // and a variable for our scale gesture detector class.
     private int position;
@@ -94,6 +97,9 @@ public class ImageDetailActivity extends AppCompatActivity {
                 break;
             case R.id.action_info:
                 loadInformationImage();
+                break;
+            case R.id.action_edit:
+                editImage();
                 break;
             case R.id.action_delete:
                 showDialogDelete();
@@ -227,6 +233,21 @@ public class ImageDetailActivity extends AppCompatActivity {
         }
     }
 
+    private  void editImage(){
+        Intent intent = new Intent();
+
+
+        Toast.makeText(this, "sss", Toast.LENGTH_SHORT).show();
+        String imgPath = imagePaths.get(mViewPager.getCurrentItem()).getPath();
+        Uri filePath = Uri.fromFile(new File(imgPath));
+        Intent dsPhotoEditorIntent = new Intent(this, DsPhotoEditorActivity.class);
+        dsPhotoEditorIntent.setData(filePath);
+        dsPhotoEditorIntent.putExtra(DsPhotoEditorConstants.DS_PHOTO_EDITOR_OUTPUT_DIRECTORY, "Pico");
+        int[] toolsToHide = {DsPhotoEditorActivity.TOOL_ORIENTATION, DsPhotoEditorActivity.TOOL_CROP};
+        dsPhotoEditorIntent.putExtra(DsPhotoEditorConstants.DS_PHOTO_EDITOR_TOOLS_TO_HIDE, toolsToHide);
+        startActivityForResult(dsPhotoEditorIntent, RESULT_CODE);
+    }
+
     public void callBroadCast() {
         if (Build.VERSION.SDK_INT >= 14) {
             Log.e("-->", " >= 14");
@@ -246,4 +267,6 @@ public class ImageDetailActivity extends AppCompatActivity {
                     Uri.parse("file://" + Environment.getExternalStorageDirectory())));
         }
     }
+
+
 }
