@@ -15,12 +15,29 @@ public class ImageModel implements Serializable {
     private Date date;
     private double gpsLat;
     private double gpsLong;
+    private int width;
+    private  int height;
 
     String str_folder;
     ArrayList<ImageModel> al_imagepath;
 
     private ArrayList<ImageModel> ImageList = null;
 
+    public int getWidth() {
+        return width;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
 
     public String getTitle() {
         return title;
@@ -109,6 +126,8 @@ public class ImageModel implements Serializable {
                 MediaStore.Images.Media.LATITUDE,
                 MediaStore.Images.Media.LONGITUDE,
                 MediaStore.Images.Media.TITLE,
+                MediaStore.Images.Media.WIDTH,
+                MediaStore.Images.Media.HEIGHT,
                 MediaStore.Images.Media.SIZE};
 
         // on below line we are creating a new
@@ -134,6 +153,9 @@ public class ImageModel implements Serializable {
                 double latColumnIndex = cursor.getDouble(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.LATITUDE));
                 double longColumnIndex = cursor.getDouble(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.LONGITUDE));
                 String sizeColumnIndex = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.SIZE));
+                int widthColumnIndex = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.WIDTH));
+                int heightColumnIndex = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.HEIGHT));
+
                 // after that we are getting the image file path
                 // and adding that path in our array list.
 
@@ -144,6 +166,8 @@ public class ImageModel implements Serializable {
                 img.setGpsLat(latColumnIndex);
                 img.setGpsLong(longColumnIndex);
                 img.setSize(sizeColumnIndex);
+                img.setWidth(widthColumnIndex);
+                img.setHeight(heightColumnIndex);
                 ImageList.add(img);
 
             } while (cursor.moveToNext());

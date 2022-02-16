@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -68,6 +69,8 @@ public class ChildRecyclerAdapter extends RecyclerView.Adapter<ChildRecyclerAdap
                     context.startActivity(i);
                 }
             });
+
+
         }
     }
 
@@ -79,11 +82,12 @@ public class ChildRecyclerAdapter extends RecyclerView.Adapter<ChildRecyclerAdap
 
     class ViewHolder extends RecyclerView.ViewHolder {
         ImageView itemImageView;
-
+        CardView cardView;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             itemImageView = itemView.findViewById(R.id.idCIVImage);
+
         }
     }
 }

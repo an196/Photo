@@ -68,6 +68,7 @@ public class ViewPagerAdapter extends PagerAdapter {
                 .into( imageView);
 
         itemView.setTag(position);
+
         // Adding the View
         Objects.requireNonNull(container).addView(itemView);
 

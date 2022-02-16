@@ -184,12 +184,11 @@ public class MainActivity extends AppCompatActivity implements  NavigationView.O
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.newer:
+
                 return true;
             case R.id.older:
                 return true;
-
             case R.id.two:
-
                 return true;
 
             case R.id.three:
@@ -208,10 +207,11 @@ public class MainActivity extends AppCompatActivity implements  NavigationView.O
 
             case R.id.setting:
                 goToSettings();
-                break;
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
 
         }
-        return super.onOptionsItemSelected(item);
     }
     private void openGalleryFragment(){
         if(currentFragment !=  FRAGMENT_HOME){
@@ -451,4 +451,6 @@ public class MainActivity extends AppCompatActivity implements  NavigationView.O
         mediaScanIntent.setData(contentUri);
         this.sendBroadcast(mediaScanIntent);
     }
+
+
 }
