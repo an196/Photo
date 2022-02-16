@@ -62,7 +62,7 @@ public class ViewPagerAdapter extends PagerAdapter {
         File imgFile = new File(images.get(position).getPath());
         // setting the image in the imageView
         Glide.with(context).load("/"+ imgFile)
-                .centerCrop()
+                .fitCenter()
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .skipMemoryCache(true)
                 .into( imageView);

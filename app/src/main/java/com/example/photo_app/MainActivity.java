@@ -97,6 +97,7 @@ public class MainActivity extends AppCompatActivity implements  NavigationView.O
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(mNavigationView, navController);
 
+
         mBottomNavigationView = findViewById(R.id.bottom_navigation);
         mBottomNavigationView.setOnItemSelectedListener(
                 new NavigationBarView.OnItemSelectedListener() {
@@ -134,6 +135,7 @@ public class MainActivity extends AppCompatActivity implements  NavigationView.O
     @Override
     protected  void onResume() {
         super.onResume();
+
     }
 
     @Override
