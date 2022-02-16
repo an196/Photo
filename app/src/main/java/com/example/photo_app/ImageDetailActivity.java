@@ -1,10 +1,15 @@
 package com.example.photo_app;
 
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ContentResolver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaScannerConnection;
@@ -12,6 +17,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.BaseColumns;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,7 +26,11 @@ import android.view.ScaleGestureDetector;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.IntentSenderRequest;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
@@ -28,7 +39,9 @@ import androidx.viewpager.widget.ViewPager;
 import com.dsphotoeditor.sdk.activity.DsPhotoEditorActivity;
 import com.dsphotoeditor.sdk.utils.DsPhotoEditorConstants;
 import com.example.photo_app.adapter.ViewPagerAdapter;
+import com.example.photo_app.helper.AndroidXI;
 import com.example.photo_app.model.ImageModel;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -38,9 +51,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.photo_app.MainActivity.imagePaths;
+
 public class ImageDetailActivity extends AppCompatActivity {
     int IMAGE_REQUEST_CODE = 45;
     int RESULT_CODE = 200;
+    public static final int DELETE_REQUEST_CODE = 13;
+
     // creating a string variable, image view variable
     // and a variable for our scale gesture detector class.
     private int position;
@@ -55,6 +71,7 @@ public class ImageDetailActivity extends AppCompatActivity {
 
     // Creating Object of ViewPagerAdapter
     ViewPagerAdapter mViewPagerAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,22 +79,23 @@ public class ImageDetailActivity extends AppCompatActivity {
 
 
         // calling the action bar
-        mActionBar  = getSupportActionBar();
+        mActionBar = getSupportActionBar();
 
         // showing the back button in action bar
         mActionBar.setDisplayHomeAsUpEnabled(true);
 
         // on below line getting data which we have passed from our adapter class.
-        position = getIntent().getIntExtra("position", 0 );
+        position = getIntent().getIntExtra("position", 0);
 
-        ArrayList<ImageModel> album = (ArrayList<ImageModel>) getIntent().getSerializableExtra("images" );;
+        ArrayList<ImageModel> album = (ArrayList<ImageModel>) getIntent().getSerializableExtra("images");
+        ;
 
-        if( album != null)
+        if (album != null)
 
             imagePaths = album;
 
 
-        mViewPager = (ViewPager)findViewById(R.id.viewPagerImageDetail);
+        mViewPager = (ViewPager) findViewById(R.id.viewPagerImageDetail);
         mViewPagerAdapter = new ViewPagerAdapter(ImageDetailActivity.this, imagePaths);
 
         mViewPager.setAdapter(mViewPagerAdapter);
@@ -161,9 +179,8 @@ public class ImageDetailActivity extends AppCompatActivity {
         return uri;
     }
 
-    private void shareImageToAnOntherApp(){
-        imageView = (ImageView)findViewById(R.id.ivImageDetail);
-
+    private void shareImageToAnOntherApp() {
+        imageView = (ImageView) findViewById(R.id.ivImageDetail);
 
 
         Bitmap bitmap = null;
@@ -171,7 +188,7 @@ public class ImageDetailActivity extends AppCompatActivity {
             File f = new File(imagePaths.get(mViewPager.getCurrentItem()).getPath());
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-            bitmap =   BitmapFactory.decodeStream(new FileInputStream(f), null, options);
+            bitmap = BitmapFactory.decodeStream(new FileInputStream(f), null, options);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -179,8 +196,8 @@ public class ImageDetailActivity extends AppCompatActivity {
         imageView.invalidate();
     }
 
-    private  void loadInformationImage(){
-        Intent intent =new Intent(ImageDetailActivity.this, MapsActivity.class);
+    private void loadInformationImage() {
+        Intent intent = new Intent(ImageDetailActivity.this, MapsActivity.class);
 
         intent.putExtra("path", imagePaths.get(mViewPager.getCurrentItem()).getPath());
         intent.putExtra("title", imagePaths.get(mViewPager.getCurrentItem()).getTitle());
@@ -192,12 +209,12 @@ public class ImageDetailActivity extends AppCompatActivity {
     }
 
 
-
-    private void showDialogDelete(){
+    private void showDialogDelete() {
         DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.R)
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                switch (which){
+                switch (which) {
                     case DialogInterface.BUTTON_POSITIVE:
                         //Yes button clicked
                         deleteImage();
@@ -216,24 +233,64 @@ public class ImageDetailActivity extends AppCompatActivity {
                 .setNegativeButton("No", dialogClickListener).show();
     }
 
-    private void deleteImage(){
+    @RequiresApi(api = Build.VERSION_CODES.R)
+    private void deleteImage() {
+        androidx.appcompat.app.AlertDialog.Builder builder = new MaterialAlertDialogBuilder(this);
+        //builder1.setMessage("Do you want to delete image ?");
+        builder.setCancelable(true);
+        androidx.appcompat.app.AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+
+
         String path = imagePaths.get(mViewPager.getCurrentItem()).getPath();
-        File file = new File(path);
 
+        Toast.makeText(this, path, Toast.LENGTH_SHORT).show();
 
-        Toast.makeText( this, path, Toast.LENGTH_SHORT).show();
-        File fdelete = new File(path);
-        if (fdelete.exists()) {
-            if (fdelete.delete()) {
-                Log.e("-->", "file Deleted :" + path);
-                callBroadCast();
-            } else {
-                Log.e("-->", "file not Deleted :" + path);
+        Uri uri = getContentUriId(Uri.fromFile(new File(path)));
+        try {
+            deleteAPI28(uri, this);
+            Toast.makeText(this, "Image Deleted successfully", Toast.LENGTH_SHORT).show();
+            alertDialog.dismiss();
+
+        } catch (Exception e) {
+            //  PendingIntent createDeleteRequest()
+            try {
+                deleteAPI30(uri);
+                        //notifyItemRemoved(position);
+                Toast.makeText(this, "Image Deleted successfully", Toast.LENGTH_SHORT).show();
+
+            } catch (IntentSender.SendIntentException e1) {
+                e1.printStackTrace();
             }
+            alertDialog.dismiss();
         }
     }
 
-    private  void editImage(){
+    public static int deleteAPI28(Uri uri, Context context) {
+        ContentResolver resolver = context.getContentResolver();
+        return resolver.delete(uri, null, null);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.R)
+
+    private void deleteAPI30(Uri imageUri) throws IntentSender.SendIntentException {
+        if (imageUri == null) {
+            Toast.makeText(this, "null", Toast.LENGTH_SHORT).show();
+        } else {
+            AndroidXI.getInstance().with(this).delete(launcher, imageUri);
+        }
+
+    }
+
+    private final ActivityResultLauncher<IntentSenderRequest> launcher = registerForActivityResult(
+            new ActivityResultContracts.StartIntentSenderForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    Toast.makeText(this, "deleted", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+    private void editImage() {
         Intent intent = new Intent();
 
 
@@ -245,7 +302,7 @@ public class ImageDetailActivity extends AppCompatActivity {
         dsPhotoEditorIntent.putExtra(DsPhotoEditorConstants.DS_PHOTO_EDITOR_OUTPUT_DIRECTORY, "Pico");
         int[] toolsToHide = {DsPhotoEditorActivity.TOOL_ORIENTATION, DsPhotoEditorActivity.TOOL_CROP};
         dsPhotoEditorIntent.putExtra(DsPhotoEditorConstants.DS_PHOTO_EDITOR_TOOLS_TO_HIDE, toolsToHide);
-        startActivityForResult(dsPhotoEditorIntent, RESULT_CODE);
+        ((Activity)this).startActivityForResult(dsPhotoEditorIntent, RESULT_CODE);
     }
 
     public void callBroadCast() {
@@ -268,5 +325,21 @@ public class ImageDetailActivity extends AppCompatActivity {
         }
     }
 
-
+    private Uri getContentUriId(Uri imageUri) {
+        String[] projections = {MediaStore.MediaColumns._ID};
+        Cursor cursor = getContentResolver().query(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                projections,
+                MediaStore.MediaColumns.DATA + "=?",
+                new String[]{imageUri.getPath()}, null);
+        long id = 0;
+        if (cursor != null) {
+            if (cursor.getCount() > 0) {
+                cursor.moveToFirst();
+                id = cursor.getLong(cursor.getColumnIndexOrThrow(BaseColumns._ID));
+            }
+        }
+        cursor.close();
+        return Uri.withAppendedPath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, String.valueOf((int) id));
+    }
 }
