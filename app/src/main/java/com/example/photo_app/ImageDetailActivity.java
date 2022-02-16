@@ -243,9 +243,6 @@ public class ImageDetailActivity extends AppCompatActivity {
 
 
         String path = imagePaths.get(mViewPager.getCurrentItem()).getPath();
-
-        Toast.makeText(this, path, Toast.LENGTH_SHORT).show();
-
         Uri uri = getContentUriId(Uri.fromFile(new File(path)));
         try {
             deleteAPI28(uri, this);
@@ -270,6 +267,13 @@ public class ImageDetailActivity extends AppCompatActivity {
         ContentResolver resolver = context.getContentResolver();
         return resolver.delete(uri, null, null);
     }
+    private final ActivityResultLauncher<IntentSenderRequest> launcher = registerForActivityResult(
+            new ActivityResultContracts.StartIntentSenderForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    Toast.makeText(this, "deleted", Toast.LENGTH_SHORT).show();
+                }
+            });
 
     @RequiresApi(api = Build.VERSION_CODES.R)
 
@@ -282,13 +286,7 @@ public class ImageDetailActivity extends AppCompatActivity {
 
     }
 
-    private final ActivityResultLauncher<IntentSenderRequest> launcher = registerForActivityResult(
-            new ActivityResultContracts.StartIntentSenderForResult(),
-            result -> {
-                if (result.getResultCode() == Activity.RESULT_OK) {
-                    Toast.makeText(this, "deleted", Toast.LENGTH_SHORT).show();
-                }
-            });
+
 
     private void editImage() {
         Intent intent = new Intent();
