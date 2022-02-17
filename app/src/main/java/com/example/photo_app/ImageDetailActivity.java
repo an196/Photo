@@ -26,6 +26,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.IntentSenderRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -298,5 +299,17 @@ public class ImageDetailActivity extends AppCompatActivity {
         }
         cursor.close();
         return Uri.withAppendedPath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, String.valueOf((int) id));
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == RESULT_CODE) {
+            Intent intent = new Intent(ImageDetailActivity.this, MainActivity.class);
+            intent.setData(data.getData());
+            startActivity(intent);
+            ImageDetailActivity.this.finish();
+        }
     }
 }
