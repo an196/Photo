@@ -2,8 +2,6 @@ package com.example.photo_app;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.ContentResolver;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -12,14 +10,12 @@ import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.MediaScannerConnection;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.BaseColumns;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ScaleGestureDetector;
@@ -41,7 +37,6 @@ import com.dsphotoeditor.sdk.utils.DsPhotoEditorConstants;
 import com.example.photo_app.adapter.ViewPagerAdapter;
 import com.example.photo_app.helper.AndroidXI;
 import com.example.photo_app.model.ImageModel;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -83,6 +78,7 @@ public class ImageDetailActivity extends AppCompatActivity {
 
         // showing the back button in action bar
         mActionBar.setDisplayHomeAsUpEnabled(true);
+        mActionBar.setBackgroundDrawable(new ColorDrawable( getResources().getColor(R.color.yellow,null)));
 
         // on below line getting data which we have passed from our adapter class.
         position = getIntent().getIntExtra("position", 0);
@@ -235,49 +231,34 @@ public class ImageDetailActivity extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.R)
     private void deleteImage() {
-        androidx.appcompat.app.AlertDialog.Builder builder = new MaterialAlertDialogBuilder(this);
-        //builder1.setMessage("Do you want to delete image ?");
-        builder.setCancelable(true);
-        androidx.appcompat.app.AlertDialog alertDialog = builder.create();
-        alertDialog.show();
+
 
 
         String path = imagePaths.get(mViewPager.getCurrentItem()).getPath();
         Uri uri = getContentUriId(Uri.fromFile(new File(path)));
         try {
-            deleteAPI28(uri, this);
-            Toast.makeText(this, "Image Deleted successfully", Toast.LENGTH_SHORT).show();
-            alertDialog.dismiss();
+            deleteAPIX(uri);
+            Toast.makeText(this, "deleted", Toast.LENGTH_SHORT).show();
 
+            Intent intent = new Intent(ImageDetailActivity.this ,MainActivity.class);
+            startActivity(intent);
+            ImageDetailActivity.this.finish();
         } catch (Exception e) {
-            //  PendingIntent createDeleteRequest()
-            try {
-                deleteAPI30(uri);
-                        //notifyItemRemoved(position);
-                Toast.makeText(this, "Image Deleted successfully", Toast.LENGTH_SHORT).show();
-
-            } catch (IntentSender.SendIntentException e1) {
-                e1.printStackTrace();
-            }
-            alertDialog.dismiss();
+            e.printStackTrace();
         }
     }
 
-    public static int deleteAPI28(Uri uri, Context context) {
-        ContentResolver resolver = context.getContentResolver();
-        return resolver.delete(uri, null, null);
-    }
+
     private final ActivityResultLauncher<IntentSenderRequest> launcher = registerForActivityResult(
             new ActivityResultContracts.StartIntentSenderForResult(),
             result -> {
                 if (result.getResultCode() == Activity.RESULT_OK) {
-                    Toast.makeText(this, "deleted", Toast.LENGTH_SHORT).show();
                 }
             });
 
     @RequiresApi(api = Build.VERSION_CODES.R)
 
-    private void deleteAPI30(Uri imageUri) throws IntentSender.SendIntentException {
+    private void deleteAPIX(Uri imageUri) throws IntentSender.SendIntentException {
         if (imageUri == null) {
             Toast.makeText(this, "null", Toast.LENGTH_SHORT).show();
         } else {
@@ -289,10 +270,6 @@ public class ImageDetailActivity extends AppCompatActivity {
 
 
     private void editImage() {
-        Intent intent = new Intent();
-
-
-        Toast.makeText(this, "sss", Toast.LENGTH_SHORT).show();
         String imgPath = imagePaths.get(mViewPager.getCurrentItem()).getPath();
         Uri filePath = Uri.fromFile(new File(imgPath));
         Intent dsPhotoEditorIntent = new Intent(this, DsPhotoEditorActivity.class);
@@ -303,25 +280,7 @@ public class ImageDetailActivity extends AppCompatActivity {
         ((Activity)this).startActivityForResult(dsPhotoEditorIntent, RESULT_CODE);
     }
 
-    public void callBroadCast() {
-        if (Build.VERSION.SDK_INT >= 14) {
-            Log.e("-->", " >= 14");
-            MediaScannerConnection.scanFile(this, new String[]{Environment.getExternalStorageDirectory().toString()}, null, new MediaScannerConnection.OnScanCompletedListener() {
-                /*
-                 *   (non-Javadoc)
-                 * @see android.media.MediaScannerConnection.OnScanCompletedListener#onScanCompleted(java.lang.String, android.net.Uri)
-                 */
-                public void onScanCompleted(String path, Uri uri) {
-                    Log.e("ExternalStorage", "Scanned " + path + ":");
-                    Log.e("ExternalStorage", "-> uri=" + uri);
-                }
-            });
-        } else {
-            Log.e("-->", " < 14");
-            sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED,
-                    Uri.parse("file://" + Environment.getExternalStorageDirectory())));
-        }
-    }
+
 
     private Uri getContentUriId(Uri imageUri) {
         String[] projections = {MediaStore.MediaColumns._ID};
