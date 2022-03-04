@@ -232,9 +232,6 @@ public class ImageDetailActivity extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.R)
     private void deleteImage() {
-
-
-
         String path = imagePaths.get(mViewPager.getCurrentItem()).getPath();
         Uri uri = getContentUriId(Uri.fromFile(new File(path)));
         try {
@@ -254,6 +251,7 @@ public class ImageDetailActivity extends AppCompatActivity {
             new ActivityResultContracts.StartIntentSenderForResult(),
             result -> {
                 if (result.getResultCode() == Activity.RESULT_OK) {
+
                 }
             });
 

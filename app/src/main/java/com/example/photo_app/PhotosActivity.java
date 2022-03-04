@@ -1,5 +1,6 @@
 package com.example.photo_app;
 
+import android.graphics.drawable.ColorDrawable;
 import android.media.ExifInterface;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -42,7 +43,7 @@ public class PhotosActivity extends AppCompatActivity {
 
         // showing the back button in action bar
         actionBar.setDisplayHomeAsUpEnabled(true);
-
+        actionBar.setBackgroundDrawable(new ColorDrawable( getResources().getColor(R.color.yellow,null)));
         imagesRV = findViewById(R.id.idRVImages);
 
         int_position = getIntent().getIntExtra("value", 0);
